@@ -40,6 +40,7 @@ export const seedAll = mutation({
       ]) await ctx.db.insert("team", m);
 
     const branches = await ctx.db.query("branches").collect();
+      for (const b of [
         { nameAr: "المصنع الرئيسي والمخبز", nameEn: "Main Factory & Bakery", addressAr: "سلطنة عمان", addressEn: "Sultanate of Oman", phone: "+968", hours: "7:00 AM - 10:00 PM", mapUrl: "https://maps.app.goo.gl/ts1RtuzNyLm63izf7?g_st=ic", visible: true },
         { nameAr: "فرع الرياض الرئيسي", nameEn: "Riyadh Main Branch", addressAr: "حي العليا، شارع الملك فهد، الرياض", addressEn: "Al-Olaya District, King Fahd Road, Riyadh", phone: "+966 11 234 5678", hours: "7:00 ص - 11:00 م", mapUrl: "https://maps.google.com/?q=Riyadh+Al-Olaya", visible: true },
         { nameAr: "فرع جدة", nameEn: "Jeddah Branch", addressAr: "حي الزهراء، شارع التحلية، جدة", addressEn: "Al-Zahra District, Al-Tahliya Street, Jeddah", phone: "+966 12 345 6789", hours: "7:00 ص - 12:00 م", mapUrl: "https://maps.google.com/?q=Jeddah+Al-Tahliya", visible: true },
@@ -53,6 +54,7 @@ export const seedAll = mutation({
       ]) await ctx.db.insert("testimonials", t);
 
     const gallery = await ctx.db.query("gallery").collect();
+      for (const g of [
         { imageUrl: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80", captionAr: "مرافق التصنيع والمصنع", captionEn: "Our State-of-the-art Factory", visible: true, order: 1 },
         { imageUrl: "https://images.unsplash.com/photo-1555507036-ab1f40ce88cb?w=800&q=80", captionAr: "روعة المعرض من الداخل", captionEn: "Bakery Interior & Displays", visible: true, order: 2 },
         { imageUrl: "https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?w=800&q=80", captionAr: "باصات التوصيل الخاصة", captionEn: "Arirang Delivery Fleet", visible: true, order: 3 },
