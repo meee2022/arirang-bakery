@@ -29,7 +29,11 @@ export default function Corporate() {
       await createRequest(form);
       setSent(true);
       setForm({ companyName: "", contactName: "", phone: "", email: "", orderType: "", quantity: "", notes: "" });
-    } catch {} finally { setLoading(false); }
+    } catch {
+      alert(lang === "ar" ? "حدث خطأ أثناء الإرسال، حاول مرة أخرى" : "Failed to send request, please try again");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

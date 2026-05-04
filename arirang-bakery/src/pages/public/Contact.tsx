@@ -17,10 +17,10 @@ export default function Contact() {
   const socialSettings = useQuery(api.settings.get, { key: "social" })?.value;
 
   const contact = contactSettings || {
-    phone: "+966 11 234 5678",
+    phone: "+974 4444 0000",
     email: "info@arirangbakery.com",
-    addressAr: "حي العليا، شارع الملك فهد، الرياض، المملكة العربية السعودية",
-    addressEn: "Al-Olaya District, King Fahd Road, Riyadh, Saudi Arabia",
+    addressAr: "حي الدفنة، شارع الكورنيش، الدوحة، قطر",
+    addressEn: "Al Dafna District, Corniche Street, Doha, Qatar",
     hours: "7:00 ص - 11:00 م (يومياً)",
   };
   const social = socialSettings || {
@@ -34,7 +34,11 @@ export default function Contact() {
       await sendMessage(form);
       setSent(true);
       setForm({ name: "", phone: "", email: "", subject: "", message: "" });
-    } catch {} finally { setLoading(false); }
+    } catch {
+      alert(lang === "ar" ? "حدث خطأ أثناء الإرسال، حاول مرة أخرى" : "Failed to send message, please try again");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

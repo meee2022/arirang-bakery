@@ -134,17 +134,17 @@ export default function Products() {
                 <Link to="/contact" className="bg-[#F4F2EB] border border-[#d6d0c4] text-[#483420] rounded px-8 py-3 w-full sm:w-auto font-medium hover:bg-white transition-colors" style={{fontFamily:"Cairo,Inter,serif"}}>
                   Our Store / متجرنا
                 </Link>
-                <Link to="/products" className="bg-[#5c4033] text-white rounded px-8 py-3 w-full sm:w-auto font-medium hover:bg-[#483420] transition-colors" style={{fontFamily:"Cairo,Inter,serif"}} onClick={() => window.scrollTo(0, 1500)}>
+                <a href="#products-catalog" className="bg-[#5c4033] text-white rounded px-8 py-3 w-full sm:w-auto font-medium hover:bg-[#483420] transition-colors" style={{fontFamily:"Cairo,Inter,serif"}}>
                   Order Online / اطلب عبر الإنترنت
-                </Link>
+                </a>
               </div>
             </div>
           </AnimatedSection>
         </div>
       </section>
 
-      {/* Product Catalog Grid (Original function) */}
-      <section className="py-16 border-t border-[#C9A96E]/20 bg-white">
+      {/* Product Catalog Grid */}
+      <section id="products-catalog" className="py-16 border-t border-[#C9A96E]/20 bg-white">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <SectionTitle 
               eyebrow={lang === "ar" ? "تصفح القائمة" : "Browse Menu"} 

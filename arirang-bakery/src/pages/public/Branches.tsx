@@ -13,11 +13,11 @@ export default function Branches() {
     _id: "factory-main",
     nameAr: "المصنع الرئيسي والمخبز",
     nameEn: "Main Factory & Bakery",
-    addressAr: "سلطنة عمان",
-    addressEn: "Sultanate of Oman",
-    phone: "+968",
+    addressAr: "الدوحة، قطر",
+    addressEn: "Doha, Qatar",
+    phone: "+974 4444 0000",
     hours: "7:00 AM - 10:00 PM",
-    mapUrl: "https://maps.app.goo.gl/ts1RtuzNyLm63izf7?g_st=ic"
+    mapUrl: "https://maps.google.com/?q=25.2854,51.5310"
   };
 
   const displayBranches = branches !== undefined ? [factoryBranch, ...branches] : undefined;
@@ -32,6 +32,7 @@ export default function Branches() {
           <p className="text-white/80 mt-4 max-w-xl mx-auto" style={{fontFamily:"Cairo,Inter,serif"}}>{t("branchesSub")}</p>
         </AnimatedSection>
       </section>
+
       <section className="section-py bg-[#FDFAF5]">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           {displayBranches === undefined ? (
@@ -55,10 +56,12 @@ export default function Branches() {
                         <MapPin size={16} className="text-[#C9A96E] mt-0.5 flex-shrink-0" />
                         <span className="text-sm text-[#7A6A58]" style={{fontFamily:"Cairo,Inter,serif"}}>{lang === "ar" ? b.addressAr : b.addressEn}</span>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <Phone size={16} className="text-[#C9A96E] flex-shrink-0" />
-                        <a href={`tel:${b.phone}`} className="text-sm text-[#7A6A58] hover:text-[#6B1A2A] transition-colors" dir="ltr">{b.phone}</a>
-                      </div>
+                      {b.phone && (
+                        <div className="flex items-center gap-3">
+                          <Phone size={16} className="text-[#C9A96E] flex-shrink-0" />
+                          <a href={`tel:${b.phone}`} className="text-sm text-[#7A6A58] hover:text-[#6B1A2A] transition-colors" dir="ltr">{b.phone}</a>
+                        </div>
+                      )}
                       <div className="flex items-center gap-3">
                         <Clock size={16} className="text-[#C9A96E] flex-shrink-0" />
                         <span className="text-sm text-[#7A6A58]" style={{fontFamily:"Cairo,Inter,serif"}}>{b.hours}</span>
@@ -76,19 +79,20 @@ export default function Branches() {
               ))}
             </div>
           )}
-          {/* Interactive Map */}
+
+          {/* Interactive Map — Doha, Qatar */}
           <AnimatedSection className="mt-14">
             <div className="rounded-2xl overflow-hidden border border-[#C9A96E]/20 shadow-xl h-[400px] bg-[#F5EDD8] relative">
               <iframe
-                title="Arirang Bakery Factory Location"
-                src="https://maps.google.com/maps?q=25.167149,51.398342&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                title="Arirang Bakery — Doha, Qatar"
+                src="https://maps.google.com/maps?q=25.2854,51.5310&t=&z=13&ie=UTF8&iwloc=&output=embed"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-              ></iframe>
+              />
             </div>
           </AnimatedSection>
         </div>
@@ -96,4 +100,3 @@ export default function Branches() {
     </div>
   );
 }
-

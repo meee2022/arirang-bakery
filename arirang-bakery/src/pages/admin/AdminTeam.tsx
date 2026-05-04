@@ -6,7 +6,15 @@ import { Modal } from "../../components/ui/Modal";
 import { Plus, Pencil, Trash2, Eye, EyeOff } from "lucide-react";
 import type { Id } from "../../../convex/_generated/dataModel";
 
-const emptyForm = { nameAr:"",nameEn:"",titleAr:"",titleEn:"",bioAr:"",bioEn:"",photo:"",visible:true,order:0 };
+const emptyForm = { nameAr:"",nameEn:"",titleAr:"",titleEn:"",bioAr:"",bioEn:"",quoteAr:"",quoteEn:"",experienceAr:"",experienceEn:"",specialtiesAr:"",specialtiesEn:"",achievementsAr:"",achievementsEn:"",socialEmail:"",socialInstagram:"",photo:"",visible:true,order:0 };
+
+function parseBio(bioStr: string) {
+  try {
+    const data = JSON.parse(bioStr);
+    if (data && typeof data === 'object' && data.text !== undefined) return data;
+  } catch (e) {}
+  return { text: bioStr, quote: "", exp: "", spec: "", ach: "", email: "", ig: "" };
+}
 
 export default function AdminTeam() {
   const { lang } = useLanguage();
@@ -20,15 +28,39 @@ export default function AdminTeam() {
   const [loading, setLoading] = useState(false);
 
   const openCreate = () => { setEditing(null); setForm(emptyForm); setModal(true); };
-  const openEdit = (m: any) => { setEditing(m); setForm({ nameAr:m.nameAr,nameEn:m.nameEn,titleAr:m.titleAr,titleEn:m.titleEn,bioAr:m.bioAr,bioEn:m.bioEn,photo:m.photo,visible:m.visible,order:m.order }); setModal(true); };
+  const openEdit = (m: any) => { 
+    const arData = parseBio(m.bioAr || "");
+    const enData = parseBio(m.bioEn || "");
+    setEditing(m); 
+    setForm({ 
+      nameAr:m.nameAr, nameEn:m.nameEn, titleAr:m.titleAr, titleEn:m.titleEn, 
+      photo:m.photo, visible:m.visible, order:m.order,
+      bioAr: arData.text, bioEn: enData.text,
+      quoteAr: arData.quote || "", quoteEn: enData.quote || "",
+      experienceAr: arData.exp || "", experienceEn: enData.exp || "",
+      specialtiesAr: arData.spec || "", specialtiesEn: enData.spec || "",
+      achievementsAr: arData.ach || "", achievementsEn: enData.ach || "",
+      socialEmail: enData.email || "", socialInstagram: enData.ig || ""
+    }); 
+    setModal(true); 
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault(); setLoading(true);
     try {
-      if (editing) await update({ id: editing._id as Id<"team">, ...form });
-      else await create(form);
+      const bioArStr = JSON.stringify({ text: form.bioAr, quote: form.quoteAr, exp: form.experienceAr, spec: form.specialtiesAr, ach: form.achievementsAr });
+      const bioEnStr = JSON.stringify({ text: form.bioEn, quote: form.quoteEn, exp: form.experienceEn, spec: form.specialtiesEn, ach: form.achievementsEn, email: form.socialEmail, ig: form.socialInstagram });
+      
+      const payload = {
+        nameAr: form.nameAr, nameEn: form.nameEn, titleAr: form.titleAr, titleEn: form.titleEn,
+        photo: form.photo, visible: form.visible, order: form.order,
+        bioAr: bioArStr, bioEn: bioEnStr
+      };
+
+      if (editing) await update({ id: editing._id as Id<"team">, ...payload });
+      else await create(payload);
       setModal(false);
-    } catch {} finally { setLoading(false); }
+    } catch (err) { console.error(err); } finally { setLoading(false); }
   };
 
   return (
@@ -63,6 +95,32 @@ export default function AdminTeam() {
           </div>
           <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">Arabic Bio</label><textarea rows={2} className="form-input resize-none" value={form.bioAr} onChange={e=>setForm({...form,bioAr:e.target.value})} /></div>
           <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">English Bio</label><textarea rows={2} className="form-input resize-none" dir="ltr" value={form.bioEn} onChange={e=>setForm({...form,bioEn:e.target.value})} /></div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">Arabic Quote / Vision</label><textarea rows={2} className="form-input resize-none italic" value={form.quoteAr} onChange={e=>setForm({...form,quoteAr:e.target.value})} /></div>
+            <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">English Quote / Vision</label><textarea rows={2} className="form-input resize-none italic" dir="ltr" value={form.quoteEn} onChange={e=>setForm({...form,quoteEn:e.target.value})} /></div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">Arabic Experience</label><textarea rows={2} className="form-input resize-none" value={form.experienceAr} onChange={e=>setForm({...form,experienceAr:e.target.value})} /></div>
+            <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">English Experience</label><textarea rows={2} className="form-input resize-none" dir="ltr" value={form.experienceEn} onChange={e=>setForm({...form,experienceEn:e.target.value})} /></div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">Arabic Specialties</label><input className="form-input" value={form.specialtiesAr} onChange={e=>setForm({...form,specialtiesAr:e.target.value})} /></div>
+            <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">English Specialties</label><input className="form-input" dir="ltr" value={form.specialtiesEn} onChange={e=>setForm({...form,specialtiesEn:e.target.value})} /></div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">Arabic Achievements</label><textarea rows={2} className="form-input resize-none" placeholder="Dash-separated list" value={form.achievementsAr} onChange={e=>setForm({...form,achievementsAr:e.target.value})} /></div>
+            <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">English Achievements</label><textarea rows={2} className="form-input resize-none" dir="ltr" placeholder="Dash-separated list" value={form.achievementsEn} onChange={e=>setForm({...form,achievementsEn:e.target.value})} /></div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">Email Contact</label><input className="form-input" dir="ltr" value={form.socialEmail} onChange={e=>setForm({...form,socialEmail:e.target.value})} /></div>
+            <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">Instagram Link</label><input className="form-input" dir="ltr" value={form.socialInstagram} onChange={e=>setForm({...form,socialInstagram:e.target.value})} /></div>
+          </div>
+
           <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">Photo URL</label><input className="form-input" dir="ltr" value={form.photo} onChange={e=>setForm({...form,photo:e.target.value})} /></div>
           <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.visible} onChange={e=>setForm({...form,visible:e.target.checked})} className="w-4 h-4 accent-[#6B1A2A]" /><span className="text-sm">Visible / مرئي</span></label>
           <div className="flex gap-3 pt-2">

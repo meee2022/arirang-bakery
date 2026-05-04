@@ -7,6 +7,7 @@ import Home from "./pages/public/Home";
 import Products from "./pages/public/Products";
 import About from "./pages/public/About";
 import Team from "./pages/public/Team";
+import TeamMemberProfile from "./pages/public/TeamMemberProfile";
 import Branches from "./pages/public/Branches";
 import Corporate from "./pages/public/Corporate";
 import Gallery from "./pages/public/Gallery";
@@ -41,6 +42,7 @@ export default function App() {
               <Route path="/products" element={<Products />} />
               <Route path="/about" element={<About />} />
               <Route path="/team" element={<Team />} />
+              <Route path="/team/:id" element={<TeamMemberProfile />} />
               <Route path="/branches" element={<Branches />} />
               <Route path="/corporate" element={<Corporate />} />
               <Route path="/gallery" element={<Gallery />} />
