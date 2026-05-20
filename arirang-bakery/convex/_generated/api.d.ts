@@ -11,6 +11,7 @@
 import type * as branches from "../branches.js";
 import type * as categories from "../categories.js";
 import type * as corporate from "../corporate.js";
+import type * as files from "../files.js";
 import type * as gallery from "../gallery.js";
 import type * as homepage from "../homepage.js";
 import type * as messages from "../messages.js";
@@ -32,6 +33,7 @@ declare const fullApi: ApiFromModules<{
   branches: typeof branches;
   categories: typeof categories;
   corporate: typeof corporate;
+  files: typeof files;
   gallery: typeof gallery;
   homepage: typeof homepage;
   messages: typeof messages;
