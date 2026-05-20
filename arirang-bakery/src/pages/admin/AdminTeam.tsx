@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { Modal } from "../../components/ui/Modal";
-import { Plus, Pencil, Trash2, Eye, EyeOff, Upload, X, Image } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, Upload, X, ImageIcon } from "lucide-react";
 import type { Id } from "../../../convex/_generated/dataModel";
 
 const emptyForm = { nameAr:"",nameEn:"",titleAr:"",titleEn:"",bioAr:"",bioEn:"",quoteAr:"",quoteEn:"",experienceAr:"",experienceEn:"",specialtiesAr:"",specialtiesEn:"",achievementsAr:"",achievementsEn:"",socialEmail:"",socialInstagram:"",photo:"",visible:true,order:0 };
@@ -206,7 +206,7 @@ export default function AdminTeam() {
                 onDragOver={e => e.preventDefault()}
                 className="border-2 border-dashed border-[#C9A96E] rounded-xl p-6 text-center cursor-pointer hover:bg-[#FDFAF5] transition-colors"
               >
-                <Image size={28} className="mx-auto mb-2 text-[#C9A96E]" />
+                <ImageIcon size={28} className="mx-auto mb-2 text-[#C9A96E]" />
                 <p className="text-sm font-semibold text-[#7A6A58]" style={{fontFamily:"Cairo,Inter,serif"}}>
                   {lang === "ar" ? "اضغط لرفع صورة أو اسحبها هنا" : "Click to upload or drag & drop"}
                 </p>
