@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { Modal } from "../../components/ui/Modal";
-import { Plus, Pencil, Trash2, Eye, EyeOff } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, Upload, X, Image } from "lucide-react";
 import type { Id } from "../../../convex/_generated/dataModel";
 
 const emptyForm = { nameAr:"",nameEn:"",titleAr:"",titleEn:"",bioAr:"",bioEn:"",quoteAr:"",quoteEn:"",experienceAr:"",experienceEn:"",specialtiesAr:"",specialtiesEn:"",achievementsAr:"",achievementsEn:"",socialEmail:"",socialInstagram:"",photo:"",visible:true,order:0 };
@@ -22,18 +22,28 @@ export default function AdminTeam() {
   const create = useMutation(api.team.create);
   const update = useMutation(api.team.update);
   const remove = useMutation(api.team.remove);
+  const generateUploadUrl = useMutation(api.files.generateUploadUrl);
+  const resolveUrl = useMutation(api.files.resolveUrl);
   const [modal, setModal] = useState(false);
   const [editing, setEditing] = useState<any>(null);
   const [form, setForm] = useState(emptyForm);
   const [loading, setLoading] = useState(false);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string>("");
+  const [uploadProgress, setUploadProgress] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const openCreate = () => { setEditing(null); setForm(emptyForm); setModal(true); };
-  const openEdit = (m: any) => { 
+  const openCreate = () => {
+    setEditing(null); setForm(emptyForm);
+    setPhotoFile(null); setPhotoPreview("");
+    setModal(true);
+  };
+  const openEdit = (m: any) => {
     const arData = parseBio(m.bioAr || "");
     const enData = parseBio(m.bioEn || "");
-    setEditing(m); 
-    setForm({ 
-      nameAr:m.nameAr, nameEn:m.nameEn, titleAr:m.titleAr, titleEn:m.titleEn, 
+    setEditing(m);
+    setForm({
+      nameAr:m.nameAr, nameEn:m.nameEn, titleAr:m.titleAr, titleEn:m.titleEn,
       photo:m.photo, visible:m.visible, order:m.order,
       bioAr: arData.text, bioEn: enData.text,
       quoteAr: arData.quote || "", quoteEn: enData.quote || "",
@@ -41,26 +51,56 @@ export default function AdminTeam() {
       specialtiesAr: arData.spec || "", specialtiesEn: enData.spec || "",
       achievementsAr: arData.ach || "", achievementsEn: enData.ach || "",
       socialEmail: enData.email || "", socialInstagram: enData.ig || ""
-    }); 
-    setModal(true); 
+    });
+    setPhotoFile(null); setPhotoPreview(m.photo || "");
+    setModal(true);
+  };
+
+  const handleFileSelect = (file: File) => {
+    if (!file.type.startsWith("image/")) return;
+    setPhotoFile(file);
+    setPhotoPreview(URL.createObjectURL(file));
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file) handleFileSelect(file);
   };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault(); setLoading(true);
     try {
+      let photoUrl = form.photo;
+
+      // Upload new image if selected
+      if (photoFile) {
+        setUploadProgress(true);
+        const uploadUrl = await generateUploadUrl();
+        const res = await fetch(uploadUrl, {
+          method: "POST",
+          headers: { "Content-Type": photoFile.type },
+          body: photoFile,
+        });
+        const { storageId } = await res.json();
+        const resolved = await resolveUrl({ storageId });
+        photoUrl = resolved ?? "";
+        setUploadProgress(false);
+      }
+
       const bioArStr = JSON.stringify({ text: form.bioAr, quote: form.quoteAr, exp: form.experienceAr, spec: form.specialtiesAr, ach: form.achievementsAr });
       const bioEnStr = JSON.stringify({ text: form.bioEn, quote: form.quoteEn, exp: form.experienceEn, spec: form.specialtiesEn, ach: form.achievementsEn, email: form.socialEmail, ig: form.socialInstagram });
-      
+
       const payload = {
         nameAr: form.nameAr, nameEn: form.nameEn, titleAr: form.titleAr, titleEn: form.titleEn,
-        photo: form.photo, visible: form.visible, order: form.order,
+        photo: photoUrl, visible: form.visible, order: form.order,
         bioAr: bioArStr, bioEn: bioEnStr
       };
 
       if (editing) await update({ id: editing._id as Id<"team">, ...payload });
       else await create(payload);
       setModal(false);
-    } catch (err) { console.error(err); } finally { setLoading(false); }
+    } catch (err) { console.error(err); setUploadProgress(false); } finally { setLoading(false); }
   };
 
   return (
@@ -121,7 +161,65 @@ export default function AdminTeam() {
             <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">Instagram Link</label><input className="form-input" dir="ltr" value={form.socialInstagram} onChange={e=>setForm({...form,socialInstagram:e.target.value})} /></div>
           </div>
 
-          <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">Photo URL</label><input className="form-input" dir="ltr" value={form.photo} onChange={e=>setForm({...form,photo:e.target.value})} /></div>
+          {/* Photo Upload */}
+          <div>
+            <label className="block text-xs font-semibold text-[#7A6A58] mb-2">
+              {lang === "ar" ? "صورة العضو" : "Member Photo"}
+            </label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={e => { const f = e.target.files?.[0]; if (f) handleFileSelect(f); }}
+            />
+            {photoPreview ? (
+              <div className="flex items-center gap-4">
+                <img
+                  src={photoPreview}
+                  alt="preview"
+                  className="w-20 h-20 rounded-full object-cover border-2 border-[#F5EDD8]"
+                />
+                <div className="flex flex-col gap-2">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold bg-[#F5EDD8] text-[#6B1A2A] rounded-lg hover:bg-[#e8dcc8] transition-colors"
+                  >
+                    <Upload size={13} />
+                    {lang === "ar" ? "تغيير الصورة" : "Change Photo"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setPhotoFile(null); setPhotoPreview(""); setForm({...form, photo:""}); }}
+                    className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
+                  >
+                    <X size={13} />
+                    {lang === "ar" ? "حذف الصورة" : "Remove"}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                onDrop={handleDrop}
+                onDragOver={e => e.preventDefault()}
+                className="border-2 border-dashed border-[#C9A96E] rounded-xl p-6 text-center cursor-pointer hover:bg-[#FDFAF5] transition-colors"
+              >
+                <Image size={28} className="mx-auto mb-2 text-[#C9A96E]" />
+                <p className="text-sm font-semibold text-[#7A6A58]" style={{fontFamily:"Cairo,Inter,serif"}}>
+                  {lang === "ar" ? "اضغط لرفع صورة أو اسحبها هنا" : "Click to upload or drag & drop"}
+                </p>
+                <p className="text-xs text-[#C9A96E] mt-1">PNG, JPG, WEBP</p>
+              </div>
+            )}
+            {uploadProgress && (
+              <p className="text-xs text-[#C9A96E] mt-2 flex items-center gap-1">
+                <span className="w-3 h-3 border border-[#C9A96E] border-t-transparent rounded-full animate-spin inline-block" />
+                {lang === "ar" ? "جاري رفع الصورة..." : "Uploading..."}
+              </p>
+            )}
+          </div>
           <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.visible} onChange={e=>setForm({...form,visible:e.target.checked})} className="w-4 h-4 accent-[#6B1A2A]" /><span className="text-sm">Visible / مرئي</span></label>
           <div className="flex gap-3 pt-2">
             <button type="submit" className="btn-primary flex-1" disabled={loading}>{loading?"...":"Save"}</button>
