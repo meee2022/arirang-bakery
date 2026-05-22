@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useLanguage } from "../../contexts/LanguageContext";
-import { ArrowLeft, ArrowRight, Mail, Instagram, Star, Briefcase, Award, CheckCircle2, Quote } from "lucide-react";
+import { ArrowLeft, ArrowRight, Mail, Globe, Star, Briefcase, Award, CheckCircle2, Quote } from "lucide-react";
 import { Logo } from "../../components/Logo";
 
 function parseBio(bioStr: string) {
@@ -226,7 +226,7 @@ export default function TeamMemberProfile() {
                         <a href={socialInstagram} target="_blank" rel="noreferrer"
                            className="flex items-center gap-3 text-white/80 hover:text-[#C9A96E] transition-colors text-sm"
                            style={{ fontFamily: "Inter,sans-serif" }}>
-                          <Instagram size={15} className="shrink-0" />
+                          <Globe size={15} className="shrink-0" />
                           <span dir="ltr" className="truncate">{socialInstagram.replace(/^https?:\/\/(www\.)?instagram\.com\/?/, "@")}</span>
                         </a>
                       )}
