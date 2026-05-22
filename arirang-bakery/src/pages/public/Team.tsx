@@ -55,35 +55,24 @@ export default function Team() {
   return (
     <div className="bg-[#FAF8F5] min-h-screen pb-24">
       {/* Header Section */}
-      <div className="burgundy-bg pattern-bg pt-32 pb-16">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
+      <div className="burgundy-bg pattern-bg pt-32 pb-20">
+        <div className="max-w-4xl mx-auto px-4 md:px-8 text-center">
           <AnimatedSection>
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-8">
-              <div className="text-left w-full md:w-1/2">
-                <p className="text-[#C9A96E] text-xs font-bold tracking-[0.2em] uppercase mb-4">
-                  {lang === "ar" ? "تراثنا وحرفتنا" : "Our Heritage & Craft"}
-                </p>
-                <h1 className="text-5xl md:text-6xl text-white mb-4 leading-tight" style={{fontFamily: "Cormorant Garamond, serif", fontWeight: 400}}>
-                  {lang === "ar" ? "الحرفيون" : "The Artisans"} <br />
-                  <span className="italic text-white/70 font-light">
-                    {lang === "ar" ? "خلف الموقد" : "Behind the Hearth"}
-                  </span>
-                </h1>
-                <p className="text-white/80 max-w-md text-sm md:text-base leading-relaxed" style={{fontFamily: lang === "ar" ? "Cairo, serif" : "Inter, sans-serif"}}>
-                  {lang === "ar"
-                    ? "فريق من أمهر الخبراء في فنون المخبوزات الفاخرة، يجمعون بين التراث الأصيل والتقنيات الحديثة."
-                    : "A team of skilled experts in premium baking, combining authentic heritage with modern techniques."}
-                </p>
-              </div>
-              <div className="text-right w-full md:w-1/2 flex flex-col items-end" dir="rtl">
-                <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight" style={{fontFamily: "Cairo, serif"}}>
-                  فريق العمل
-                </h2>
-                <p className="text-white/80 text-sm md:text-base" style={{fontFamily: "Cairo, serif"}}>
-                  نخبة من الخبراء في فنون المخبوزات
-                </p>
-              </div>
-            </div>
+            <p className="text-[#C9A96E] text-xs font-bold tracking-[0.25em] uppercase mb-5"
+               style={{ fontFamily: "Cairo,Inter,sans-serif" }}>
+              {lang === "ar" ? "تراثنا وحرفتنا" : "Our Heritage & Craft"}
+            </p>
+            <h1 className="text-5xl md:text-6xl text-white leading-tight mb-5"
+                style={{ fontFamily: lang === "ar" ? "Cairo,serif" : "Cormorant Garamond,serif", fontWeight: lang === "ar" ? 700 : 400 }}>
+              {lang === "ar" ? "فريق العمل" : "The Artisans"}
+            </h1>
+            <div className="gold-divider mx-auto mb-6" />
+            <p className="text-white/75 text-base md:text-lg leading-relaxed max-w-xl mx-auto"
+               style={{ fontFamily: lang === "ar" ? "Cairo,serif" : "Inter,sans-serif" }}>
+              {lang === "ar"
+                ? "فريق من أمهر الخبراء في فنون المخبوزات الفاخرة، يجمعون بين التراث الأصيل والتقنيات الحديثة."
+                : "A team of skilled experts in premium baking, combining authentic heritage with modern techniques."}
+            </p>
           </AnimatedSection>
         </div>
       </div>
