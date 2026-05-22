@@ -1,10 +1,20 @@
 import { useQuery } from "convex/react";
+import { useNavigate } from "react-router-dom";
 import { api } from "../../../convex/_generated/api";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { AnimatedSection } from "../../components/ui/AnimatedSection";
 
+function parseBio(bioStr: string) {
+  try {
+    const data = JSON.parse(bioStr);
+    if (data && typeof data === "object" && data.text !== undefined) return data;
+  } catch (e) {}
+  return { text: bioStr, quote: "", exp: "", spec: "", ach: "" };
+}
+
 export default function Team() {
   const { t, lang } = useLanguage();
+  const navigate = useNavigate();
   const team = useQuery(api.team.listVisible);
 
   const dummyTeam = [
@@ -90,13 +100,21 @@ export default function Team() {
                 animation="slideUp"
                 className="col-span-1 w-full h-full"
               >
-                <div className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col h-full border border-[#A8884A]/20 transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg">
+                <div
+                  onClick={() => navigate(`/team/${m._id}`)}
+                  className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col h-full border border-[#A8884A]/20 transition-all duration-300 hover:-translate-y-2 hover:shadow-lg cursor-pointer group"
+                >
                   <div className="w-full bg-[#F4F2EB] h-[300px] overflow-hidden relative">
                     <img
                       src={m.photo}
                       alt={lang === "ar" ? m.nameAr : m.nameEn}
-                      className="w-full h-full object-cover grayscale-[15%] hover:grayscale-0 hover:scale-105 transition-all duration-500"
+                      className="w-full h-full object-cover grayscale-[15%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                      <span className="text-white text-xs font-bold tracking-widest uppercase bg-[#5C1523]/80 px-4 py-1.5 rounded-full" style={{fontFamily:"Cairo,Inter,sans-serif"}}>
+                        {lang === "ar" ? "عرض البروفايل" : "View Profile"}
+                      </span>
+                    </div>
                   </div>
                   <div className="w-full p-7 flex flex-col flex-grow text-center">
                     <h3 className="text-xl text-[#483420] mb-1" style={{fontFamily: "Cormorant Garamond, serif", fontWeight: 600}}>
@@ -108,8 +126,10 @@ export default function Team() {
                     <p className="text-[#A8884A] text-[0.7rem] font-bold uppercase tracking-[0.15em] mb-4">
                       {lang === "ar" ? m.titleAr : m.titleEn}
                     </p>
-                    <p className="text-[#7A6A58] text-sm leading-relaxed" style={{fontFamily: lang === "ar" ? "Cairo, serif" : "Cormorant Garamond, serif"}}>
-                      {lang === "ar" ? `"${m.bioAr}"` : `"${m.bioEn}"`}
+                    <p className="text-[#7A6A58] text-sm leading-relaxed line-clamp-3" style={{fontFamily: lang === "ar" ? "Cairo, serif" : "Cormorant Garamond, serif"}}>
+                      {lang === "ar"
+                        ? parseBio(m.bioAr || "").text
+                        : parseBio(m.bioEn || "").text}
                     </p>
                   </div>
                 </div>
