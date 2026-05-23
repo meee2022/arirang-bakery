@@ -86,38 +86,41 @@ export default function TeamMemberProfile() {
         <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-[#A8884A]/15 print:shadow-none">
 
           {/* ── Header Banner ── */}
-          <div className="burgundy-bg pattern-bg relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#4A0F1B]/60 to-transparent" />
-            <div className="relative z-10 flex flex-col md:flex-row items-center md:items-end gap-6 px-8 md:px-14 pt-10 pb-0">
+          <div className="burgundy-bg pattern-bg relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-[#4A0F1B]/70 to-[#6B1A2A]/30" />
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 px-8 md:px-14 py-10">
 
-              {/* Photo */}
-              <div className="shrink-0 -mb-14 md:-mb-16 z-20">
-                <div className="w-28 h-28 md:w-36 md:h-36 rounded-2xl overflow-hidden border-4 border-[#C9A96E]/60 shadow-2xl">
+              {/* Photo — fixed size, no overlap */}
+              <div className="shrink-0">
+                <div className="w-32 h-32 md:w-44 md:h-44 rounded-2xl overflow-hidden border-4 border-[#C9A96E]/70 shadow-2xl">
                   {member.photo ? (
-                    <img src={member.photo} alt={name} className="w-full h-full object-cover" />
+                    <img src={member.photo} alt={name} className="w-full h-full object-cover object-top" />
                   ) : (
-                    <div className="w-full h-full bg-[#F5EDD8] flex items-center justify-center text-4xl">👤</div>
+                    <div className="w-full h-full bg-[#F5EDD8] flex items-center justify-center text-5xl">👤</div>
                   )}
                 </div>
               </div>
 
               {/* Name + Title */}
-              <div className="pb-6 text-center md:text-start flex-1">
-                <p className="text-[#C9A96E] text-xs font-bold tracking-[0.2em] uppercase mb-1">
-                  {isRtl ? "اريرانج بيكري" : "Arirang Bakery"}
+              <div className="flex-1 text-center md:text-start">
+                <p className="text-[#C9A96E] text-xs font-bold tracking-[0.25em] uppercase mb-2"
+                   style={{ fontFamily: "Cairo,Inter,sans-serif" }}>
+                  {isRtl ? "اريرانج بيكري — الدوحة، قطر" : "Arirang Bakery — Doha, Qatar"}
                 </p>
-                <h1 className="text-3xl md:text-4xl text-white font-bold leading-tight mb-1"
+                <h1 className="text-4xl md:text-5xl text-white font-bold leading-tight mb-2"
                     style={{ fontFamily: "Cairo,Cormorant Garamond,serif" }}>
                   {name}
                 </h1>
-                <p className="text-[#C9A96E] font-semibold text-sm tracking-wider uppercase"
-                   style={{ fontFamily: "Cairo,Inter,sans-serif" }}>
-                  {title}
-                </p>
+                <div className="inline-block px-4 py-1 rounded-full bg-[#C9A96E]/20 border border-[#C9A96E]/40">
+                  <p className="text-[#C9A96E] font-semibold text-sm tracking-wider"
+                     style={{ fontFamily: "Cairo,Inter,sans-serif" }}>
+                    {title}
+                  </p>
+                </div>
               </div>
 
               {/* Logo */}
-              <div className="hidden md:block pb-6 opacity-70">
+              <div className="hidden md:block opacity-60 shrink-0">
                 <Logo light size="sm" />
               </div>
             </div>
