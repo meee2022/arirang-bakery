@@ -6,14 +6,14 @@ import { Modal } from "../../components/ui/Modal";
 import { Plus, Pencil, Trash2, Eye, EyeOff, Upload, X, ImageIcon } from "lucide-react";
 import type { Id } from "../../../convex/_generated/dataModel";
 
-const emptyForm = { nameAr:"",nameEn:"",titleAr:"",titleEn:"",bioAr:"",bioEn:"",quoteAr:"",quoteEn:"",experienceAr:"",experienceEn:"",specialtiesAr:"",specialtiesEn:"",achievementsAr:"",achievementsEn:"",socialEmail:"",socialInstagram:"",photo:"",visible:true,order:0 };
+const emptyForm = { nameAr:"",nameEn:"",titleAr:"",titleEn:"",bioAr:"",bioEn:"",quoteAr:"",quoteEn:"",experienceAr:"",experienceEn:"",specialtiesAr:"",specialtiesEn:"",achievementsAr:"",achievementsEn:"",socialEmail:"",phone:"",photo:"",visible:true,order:0 };
 
 function parseBio(bioStr: string) {
   try {
     const data = JSON.parse(bioStr);
     if (data && typeof data === 'object' && data.text !== undefined) return data;
   } catch (e) {}
-  return { text: bioStr, quote: "", exp: "", spec: "", ach: "", email: "", ig: "" };
+  return { text: bioStr, quote: "", exp: "", spec: "", ach: "", email: "", phone: "" };
 }
 
 export default function AdminTeam() {
@@ -50,7 +50,8 @@ export default function AdminTeam() {
       experienceAr: arData.exp || "", experienceEn: enData.exp || "",
       specialtiesAr: arData.spec || "", specialtiesEn: enData.spec || "",
       achievementsAr: arData.ach || "", achievementsEn: enData.ach || "",
-      socialEmail: enData.email || "", socialInstagram: enData.ig || ""
+      socialEmail: enData.email || arData.email || "",
+      phone: enData.phone || arData.phone || ""
     });
     setPhotoFile(null); setPhotoPreview(m.photo || "");
     setModal(true);
@@ -88,8 +89,8 @@ export default function AdminTeam() {
         setUploadProgress(false);
       }
 
-      const bioArStr = JSON.stringify({ text: form.bioAr, quote: form.quoteAr, exp: form.experienceAr, spec: form.specialtiesAr, ach: form.achievementsAr });
-      const bioEnStr = JSON.stringify({ text: form.bioEn, quote: form.quoteEn, exp: form.experienceEn, spec: form.specialtiesEn, ach: form.achievementsEn, email: form.socialEmail, ig: form.socialInstagram });
+      const bioArStr = JSON.stringify({ text: form.bioAr, quote: form.quoteAr, exp: form.experienceAr, spec: form.specialtiesAr, ach: form.achievementsAr, email: form.socialEmail, phone: form.phone });
+      const bioEnStr = JSON.stringify({ text: form.bioEn, quote: form.quoteEn, exp: form.experienceEn, spec: form.specialtiesEn, ach: form.achievementsEn, email: form.socialEmail, phone: form.phone });
 
       const payload = {
         nameAr: form.nameAr, nameEn: form.nameEn, titleAr: form.titleAr, titleEn: form.titleEn,
@@ -157,8 +158,8 @@ export default function AdminTeam() {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">Email Contact</label><input className="form-input" dir="ltr" value={form.socialEmail} onChange={e=>setForm({...form,socialEmail:e.target.value})} /></div>
-            <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">Instagram Link</label><input className="form-input" dir="ltr" value={form.socialInstagram} onChange={e=>setForm({...form,socialInstagram:e.target.value})} /></div>
+            <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">البريد الإلكتروني / Email</label><input className="form-input" dir="ltr" type="email" placeholder="example@email.com" value={form.socialEmail} onChange={e=>setForm({...form,socialEmail:e.target.value})} /></div>
+            <div><label className="block text-xs font-semibold text-[#7A6A58] mb-1">رقم الهاتف / Phone</label><input className="form-input" dir="ltr" type="tel" placeholder="+974 5000 0000" value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} /></div>
           </div>
 
           {/* Photo Upload */}

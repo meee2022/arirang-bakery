@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useLanguage } from "../../contexts/LanguageContext";
-import { ArrowLeft, ArrowRight, Mail, Globe, Star, Briefcase, Award, CheckCircle2, Quote } from "lucide-react";
+import { ArrowLeft, ArrowRight, Mail, Phone, Star, Briefcase, Award, CheckCircle2, Quote } from "lucide-react";
 import { Logo } from "../../components/Logo";
 
 function parseBio(bioStr: string) {
@@ -55,8 +55,8 @@ export default function TeamMemberProfile() {
   const experience = isRtl ? arData.exp     : enData.exp;
   const specialties= isRtl ? arData.spec    : enData.spec;
   const achievements = isRtl ? arData.ach   : enData.ach;
-  const socialEmail    = enData.email || arData.email;
-  const socialInstagram= enData.ig    || arData.ig;
+  const socialEmail = enData.email || arData.email;
+  const phone       = enData.phone || arData.phone;
 
   const BackIcon = isRtl ? ArrowRight : ArrowLeft;
 
@@ -207,7 +207,7 @@ export default function TeamMemberProfile() {
                 )}
 
                 {/* Contact */}
-                {(socialEmail || socialInstagram) && (
+                {(socialEmail || phone) && (
                   <div className="burgundy-bg rounded-2xl p-5">
                     <h4 className="text-[#C9A96E] font-bold text-xs uppercase tracking-widest mb-4"
                         style={{ fontFamily: "Cairo,Inter,sans-serif" }}>
@@ -222,12 +222,12 @@ export default function TeamMemberProfile() {
                           <span dir="ltr" className="truncate">{socialEmail}</span>
                         </a>
                       )}
-                      {socialInstagram && (
-                        <a href={socialInstagram} target="_blank" rel="noreferrer"
+                      {phone && (
+                        <a href={`tel:${phone}`}
                            className="flex items-center gap-3 text-white/80 hover:text-[#C9A96E] transition-colors text-sm"
                            style={{ fontFamily: "Inter,sans-serif" }}>
-                          <Globe size={15} className="shrink-0" />
-                          <span dir="ltr" className="truncate">{socialInstagram.replace(/^https?:\/\/(www\.)?instagram\.com\/?/, "@")}</span>
+                          <Phone size={15} className="shrink-0" />
+                          <span dir="ltr">{phone}</span>
                         </a>
                       )}
                     </div>
